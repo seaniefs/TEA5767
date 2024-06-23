@@ -18,8 +18,8 @@
 #include <Wire.h>
 #include <TEA5767N.h>
 
-TEA5767N::TEA5767N() {
-  Wire.begin();
+TEA5767N::TEA5767N(int sda, int scl) {
+  Wire.begin(sda, scl);
   initializeTransmissionData();
   muted = false;
 }
@@ -88,7 +88,7 @@ void TEA5767N::setFrequency(float _frequency) {
 
 void TEA5767N::transmitData() {
 	Wire.beginTransmission(TEA5767_I2C_ADDRESS);
-	for (int i=0 ; i<6 ; i++) {
+	for (int i=0 ; i<sizeof(transmission_data) ; i++) {
 		Wire.write(transmission_data[i]);
 	}
 	Wire.endTransmission();
@@ -157,7 +157,7 @@ float TEA5767N::readFrequencyInMHz() {
 void TEA5767N::loadFrequency() {
 	readStatus();
 	
-	//Stores the read frequency that can be the result of a search and it´s not yet in transmission data
+	//Stores the read frequency that can be the result of a search and itï¿½s not yet in transmission data
 	//and is necessary to subsequent calls to search.
 	transmission_data[FIRST_DATA] = (transmission_data[FIRST_DATA] & 0xC0) | (reception_data[FIRST_DATA] & 0x3F);
 	transmission_data[SECOND_DATA] = reception_data[SECOND_DATA];

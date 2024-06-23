@@ -93,7 +93,7 @@ class TEA5767N {
 	  byte isBandLimitReached();
 		
 	public:
-	  TEA5767N();
+	  TEA5767N(int sda = -1, int scl = -1);
 	  void selectFrequency(float);
 	  void selectFrequencyMuting(float);
 	  void mute();
