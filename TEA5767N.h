@@ -76,7 +76,8 @@ class TEA5767N {
 	  byte transmission_data[5];
 	  byte reception_data[5];
 	  boolean muted;
-		
+	  TwoWire *pWire;
+
 	  void setFrequency(float);
 	  void transmitFrequency(float);
 	  void transmitData();
@@ -93,7 +94,7 @@ class TEA5767N {
 	  byte isBandLimitReached();
 		
 	public:
-	  TEA5767N(int sda = -1, int scl = -1);
+	  TEA5767N(int sda = -1, int scl = -1, TwoWire *pWire = nullptr);
 	  void selectFrequency(float);
 	  void selectFrequencyMuting(float);
 	  void mute();

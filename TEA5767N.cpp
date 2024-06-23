@@ -18,8 +18,9 @@
 #include <Wire.h>
 #include <TEA5767N.h>
 
-TEA5767N::TEA5767N(int sda, int scl) {
-  Wire.begin(sda, scl);
+TEA5767N::TEA5767N(int sda, int scl, TwoWire *pWire) {
+  this->pWire = pWire == nullptr ? &Wire : pWire;
+  this->pWire->begin(sda, scl);
   initializeTransmissionData();
   muted = false;
 }
@@ -87,11 +88,11 @@ void TEA5767N::setFrequency(float _frequency) {
 }
 
 void TEA5767N::transmitData() {
-	Wire.beginTransmission(TEA5767_I2C_ADDRESS);
+	pWire->beginTransmission(TEA5767_I2C_ADDRESS);
 	for (int i=0 ; i<sizeof(transmission_data) ; i++) {
-		Wire.write(transmission_data[i]);
+		pWire->write(transmission_data[i]);
 	}
-	Wire.endTransmission();
+	pWire->endTransmission();
 	delay(100);
 }
 
@@ -137,11 +138,11 @@ void TEA5767N::selectFrequencyMuting(float frequency) {
 }
 
 void TEA5767N::readStatus() {
-	Wire.requestFrom (TEA5767_I2C_ADDRESS, 5);
+	pWire->requestFrom (TEA5767_I2C_ADDRESS, 5);
 	
-	if (Wire.available ()) {
+	if (pWire->available ()) {
 		for (int i = 0; i < 5; i++) {
-			reception_data[i] = Wire.read();
+			reception_data[i] = pWire->read();
 		}
 	}
 	delay(100);
